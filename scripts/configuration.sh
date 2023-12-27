@@ -7,10 +7,10 @@
 # warranty of any kind, whether express or implied.
 
 
-[[ -z $VENDOR ]] && VENDOR="Orange Pi"
+[[ -z $VENDOR ]] && VENDOR="Octalane"
 [[ -z $ROOTPWD ]] && ROOTPWD="orangepi" # Must be changed @first login
-[[ -z $OPI_USERNAME ]] && OPI_USERNAME="orangepi" 
-[[ -z $OPI_PWD ]] && OPI_PWD="orangepi" 
+[[ -z $OPI_USERNAME ]] && OPI_USERNAME="orangepi"
+[[ -z $OPI_PWD ]] && OPI_PWD="orangepi"
 [[ -z $MAINTAINER ]] && MAINTAINER="Orange Pi" # deb signature
 [[ -z $MAINTAINERMAIL ]] && MAINTAINERMAIL="leeboby@aliyun.com" # deb signature
 [[ -z $DEB_COMPRESS ]] && DEB_COMPRESS="xz" # compress .debs with XZ by default. Use 'none' for faster/larger builds
@@ -20,11 +20,14 @@ HOSTRELEASE=$(cat /etc/os-release | grep VERSION_CODENAME | cut -d"=" -f2)
 [[ -z $HOSTRELEASE ]] && HOSTRELEASE=$(cut -d'/' -f1 /etc/debian_version)
 [[ -z $EXIT_PATCHING_ERROR ]] && EXIT_PATCHING_ERROR="" # exit patching if failed
 [[ -z $HOST ]] && HOST="$BOARD" # set hostname to the board
-[[ -z $CHINA_DOWNLOAD_MIRROR ]] && CHINA_DOWNLOAD_MIRROR=huawei
+# [[ -z $CHINA_DOWNLOAD_MIRROR ]] && CHINA_DOWNLOAD_MIRROR=huawei
+DOWNLOAD_MIRROR="singapore"
+USE_MAINLINE_GOOGLE_MIRROR="yes"
 cd "${SRC}" || exit
 [[ -z "${ROOTFSCACHE_VERSION}" ]] && ROOTFSCACHE_VERSION=11
 [[ -z "${CHROOT_CACHE_VERSION}" ]] && CHROOT_CACHE_VERSION=7
 [[ -z $PLYMOUTH ]] && PLYMOUTH="yes"
+NO_HOST_RELEASE_CHECK="yes"
 
 cd ${SRC}/scripts
 BUILD_REPOSITORY_URL=$(improved_git remote get-url $(improved_git remote 2>/dev/null | grep origin) 2>/dev/null)
@@ -589,6 +592,17 @@ if [[ $DOWNLOAD_MIRROR == "china" ]] ; then
 		DEBIAN_SECURTY='repo.huaweicloud.com/debian-security'
 		UBUNTU_MIRROR='repo.huaweicloud.com/ubuntu-ports/'
 	fi
+fi
+
+## GG to Thailand, please use Singapore instead
+if [[ ${DOWNLOAD_MIRROR} == "thailand" ]] ; then
+	DEBIAN_MIRROR='mirror.kku.ac.th/debian'
+	UBUNTU_MIRROR='mirror.thaidns.co.th/ubuntu/'
+fi
+
+if [[ ${DOWNLOAD_MIRROR} == "singapore" ]] ; then
+	DEBIAN_MIRROR='mirror.coganng.com/debian'
+	UBUNTU_MIRROR='mirror.coganng.com/ubuntu-ports/' #http://mirror.coganng.com/ubuntu/
 fi
 
 if [[ $DOWNLOAD_MIRROR == "bfsu" ]] ; then
